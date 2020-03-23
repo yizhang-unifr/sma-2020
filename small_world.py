@@ -58,14 +58,21 @@ with probability 𝑝 replace it with a new edge (𝑢,𝑤)
 with uniformly random choice of existing node 𝑤.
 '''
 
-import networkx as nx
-import matplotlib.pyplot as plt
-import random
 import os
+import random
 
-def display_graph(G, i='',nb='', ri='', ne=[], de = [], path='init.png'): #i is the new node added, ne is the list of new edges
-    dir = os.getcwd()
-    dest_dir = dir + '/small_world/'
+import matplotlib.pyplot as plt
+import networkx as nx
+
+
+def display_graph(graph, added_new_node='', nb='', ri='', list_of_new_edges=None, de=None,
+                  path='init.png'):
+    if de is None:
+        de = []
+    if list_of_new_edges is None:
+        list_of_new_edges = []
+    _dir = os.getcwd()
+    dest_dir = _dir + '/small_world/'
     try:
         os.mkdir(dest_dir)
     except OSError:
@@ -74,89 +81,94 @@ def display_graph(G, i='',nb='', ri='', ne=[], de = [], path='init.png'): #i is 
     else:
         print("Successfully created the directory %s " % dest_dir)
 
-    pos = nx.circular_layout(G)
-    if i == '' and nb =='' and ri == '' and ne == [] and de == []:
+    pos = nx.circular_layout(graph)
+    if added_new_node == '' and nb == '' and ri == '' and list_of_new_edges == [] and de == []:
         plt.close()
         new_node = []
-        rest_nodes = G.nodes()
+        rest_nodes = graph.nodes()
         new_edges = []
-        rest_edges = G.edges()
-        nx.draw_networkx_nodes(G, pos, nodelist=rest_nodes, node_color='r')
-        nx.draw_networkx_edges(G, pos, edgelist=rest_edges, edge_color='r')
-        nx.draw_networkx_labels(G,pos)
+        rest_edges = graph.edges()
+        nx.draw_networkx_nodes(graph, pos, nodelist=rest_nodes, node_color='r')
+        nx.draw_networkx_edges(graph, pos, edgelist=rest_edges, edge_color='r')
+        nx.draw_networkx_labels(graph, pos)
         # plt.show()
         plt.savefig('small_world/' + path)
         plt.close()
     else:
         plt.close()
-        new_node = [i]
+        new_node = [added_new_node]
         neighbor_node = [nb]
         random_node = [ri]
-        rest_nodes = list (set(G.nodes())-set(new_node)-set(random_node)-set(neighbor_node))
-        new_edges = ne
+        rest_nodes = list(set(graph.nodes()) - set(new_node) - set(random_node) - set(neighbor_node))
+        new_edges = list_of_new_edges
         deleted_edges = de
-        rest_edges = list(set(G.edges())-set(new_edges)-set([(b,a) for (a,b) in new_edges])-set(deleted_edges)-set([(b,a) for (a,b) in deleted_edges]))
-        nx.draw_networkx_nodes(G, pos, nodelist=new_node, node_color='g')
-        nx.draw_networkx_nodes(G, pos, nodelist=neighbor_node, node_color='y')
-        nx.draw_networkx_nodes(G, pos, nodelist=random_node, node_color='c')
-        nx.draw_networkx_nodes(G,pos,nodelist=rest_nodes, node_color='r')
-        nx.draw_networkx_edges(G, pos, edgelist=deleted_edges, edge_color='y', style='dashdot')
-        nx.draw_networkx_edges(G,pos,edgelist=new_edges,edge_color='g',style='dashdot')
-        nx.draw_networkx_edges(G,pos,edgelist=rest_edges,edge_color='r')
-        nx.draw_networkx_labels(G, pos)
+        rest_edges = list(
+            set(graph.edges()) - set(new_edges) - set([(b, a) for (a, b) in new_edges]) - set(deleted_edges) - set(
+                [(b, a) for (a, b) in deleted_edges]))
+        nx.draw_networkx_nodes(graph, pos, nodelist=new_node, node_color='g')
+        nx.draw_networkx_nodes(graph, pos, nodelist=neighbor_node, node_color='y')
+        nx.draw_networkx_nodes(graph, pos, nodelist=random_node, node_color='c')
+        nx.draw_networkx_nodes(graph, pos, nodelist=rest_nodes, node_color='r')
+        nx.draw_networkx_edges(graph, pos, edgelist=deleted_edges, edge_color='y', style='dashdot')
+        nx.draw_networkx_edges(graph, pos, edgelist=new_edges, edge_color='g', style='dashdot')
+        nx.draw_networkx_edges(graph, pos, edgelist=rest_edges, edge_color='r')
+        nx.draw_networkx_labels(graph, pos)
         # plt.show()
 
-        plt.savefig('small_world/'+path)
+        plt.savefig('small_world/' + path)
         plt.close()
+
 
 # neighbors in round
 
-def round_k_neighbors(i,k,n): # i is the node [0,n-1]
-    left_neighbors = [(i + (-1 * (x+1))) % n for x in range(k//2)][::-1]
-    right_neighbors =[(i + (x+1)) % n for x in range(k//2)]
+def round_k_neighbors(i, k, n):  # added_new_node is the node [0,n-1]
+    left_neighbors = [(i + (-1 * (x + 1))) % n for x in range(k // 2)][::-1]
+    right_neighbors = [(i + (x + 1)) % n for x in range(k // 2)]
     left_neighbors.extend(right_neighbors)
     return left_neighbors
 
+
 # generate a ring
-def ring_lattice(n,k):
+def ring_lattice(n, k):
     # init graph
-    g = nx.Graph()
-    g.add_nodes_from([x for x in range(n)])
+    graph = nx.Graph()
+    graph.add_nodes_from([x for x in range(n)])
     # get neighbors of each node and add edge any neighbor to the node
-    for i in g.nodes():
-        nb = round_k_neighbors(i,k,n)
-        g.add_edges_from([(i,j) for j in nb])
-    return g
+    for i in graph.nodes():
+        nb = round_k_neighbors(i, k, n)
+        graph.add_edges_from([(i, j) for j in nb])
+    return graph
 
-def small_world(n,k,p=0.001):
+
+def small_world(n, k, p=0.001):
     # limit value of k
-    if (k<2 or k > n-1 or k == None):
-        k = n-1
+    if k < 2 or k > n - 1 or k is None:
+        k = n - 1
 
-    g = ring_lattice(n,k)
-    display_graph(g,path='init.png')
+    graph = ring_lattice(n, k)
+    display_graph(graph, path='init.png')
     t = 0
     for v in range(n):
-        for nb in g[v]:
+        for nb in graph[v]:
             if nb > v:
-                random_node = random.randint(0,n-1)
-                if (random_node!=v) and (random_node not in [x for x in g[v]]):
+                random_node = random.randint(0, n - 1)
+                if (random_node != v) and (random_node not in [x for x in graph[v]]):
                     r = random.random()
                     if r < p:
-                        de = [(v,nb)]
-                        g.remove_edges_from(de)
-                        ne = [(v,random_node)]
-                        g.add_edges_from(ne)
-                        path = '[' + str(t + 1) + ']' + 'added(' + str(v) + ',' + str(random_node) + ')_removed(' + str(v) + ',' + str(nb) + ')_r=' + str(
+                        de = [(v, nb)]
+                        graph.remove_edges_from(de)
+                        ne = [(v, random_node)]
+                        graph.add_edges_from(ne)
+                        path = '[' + str(t + 1) + ']' + 'added(' + str(v) + ',' + str(random_node) + ')_removed(' + str(
+                            v) + ',' + str(nb) + ')_r=' + str(
                             r) + '.png'
-                        display_graph(g, i=v, nb=nb, ri=random_node, ne=ne, de=de,path=path)
+                        display_graph(graph, added_new_node=v, nb=nb, ri=random_node, list_of_new_edges=ne, de=de, path=path)
                         t += 1
-    display_graph(g,path='end.png')
+    display_graph(graph, path='end.png')
 
-    return g
+    return graph
+
 
 if __name__ == '__main__':
     g = small_world(20, 6, 0.5)
     print(len(g.edges()))
-
-
