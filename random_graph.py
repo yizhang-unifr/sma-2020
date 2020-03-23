@@ -24,9 +24,9 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 
-def display_graph(graph, i='', ne=None, path='init.png'):  # added_new_node is the new node added, list_of_new_edges is the list of new edges
-    if ne is None:
-        ne = []
+def display_graph(graph, i='', added_new_node=None, path='init.png'):  # added_new_node is the new node added, list_of_new_edges is the list of new edges
+    if added_new_node is None:
+        added_new_node = []
     _dir = os.getcwd()
     dest_dir = _dir + '/random_graph/'
     try:
@@ -39,7 +39,7 @@ def display_graph(graph, i='', ne=None, path='init.png'):  # added_new_node is t
 
     pos = nx.circular_layout(graph)
     plt.close()
-    if i == '' and ne == []:
+    if i == '' and added_new_node == []:
         new_node = []
         rest_nodes = graph.nodes()
         new_edges = []
@@ -54,7 +54,7 @@ def display_graph(graph, i='', ne=None, path='init.png'):  # added_new_node is t
         # new_node = [added_new_node]
         # rest_nodes = list (set(graph.nodes())-set(new_node))
         rest_nodes = graph.nodes()
-        new_edges = ne
+        new_edges = added_new_node
         rest_edges = list(set(graph.edges()) - set(new_edges) - set([(b, a) for (a, b) in new_edges]))
         # nx.draw_networkx_nodes(graph,pos,nodelist=new_node, node_color='g')
 
@@ -68,18 +68,18 @@ def display_graph(graph, i='', ne=None, path='init.png'):  # added_new_node is t
         plt.close()
 
 
-def erdos_renyi(G, p=0.001):
+def erdos_renyi(graph, p=0.001):
     t = 0
-    for i in G.nodes():
-        for j in G.nodes():
+    for i in graph.nodes():
+        for j in graph.nodes():
             if i != j:
                 r = random.random()
                 if r <= p:
-                    G.add_edge(i, j)
+                    graph.add_edge(i, j)
                     ne = [(i, j)]
                     path = '[' + str(t + 1) + ']' + 'ne_added_' + '(' + str(i) + ',' + str(j) + ')' + 'r=' + str(
                         r) + '.png'
-                    display_graph(G, ne=ne, path=path)
+                    display_graph(graph, added_new_node=ne, path=path)
                     t += 1
                 else:
                     # path = '['+str(t+1)+']'+'ne_not_added_' + '('+str(added_new_node)+','+str(j)+')'+'p='+str(r)+'.png'
@@ -91,9 +91,9 @@ def erdos_renyi(G, p=0.001):
 def random_graph_generator(n, p):
     graph = nx.Graph()
     graph.add_nodes_from([x for x in range(n)])
-    display_graph(graph, i='', ne=[])
+    display_graph(graph, i='', added_new_node=[])
     erdos_renyi(graph, p)
-    display_graph(graph, i='', ne=[], path='end.png')
+    display_graph(graph, i='', added_new_node=[], path='end.png')
 
 
 if __name__ == "__main__":
