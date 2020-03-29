@@ -75,3 +75,4 @@ fabric.properties
 random_graph
 small_world
 *.zip
+*.gz
