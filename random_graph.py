@@ -68,7 +68,7 @@ def display_graph(graph, i='', added_new_node=None, path='init.png'):  # added_n
         plt.close()
 
 
-def erdos_renyi(graph, p=0.001):
+def erdos_renyi(graph, p=0.001, display_steps=False):
     t = 0
     for i in graph.nodes():
         for j in graph.nodes():
@@ -77,9 +77,11 @@ def erdos_renyi(graph, p=0.001):
                 if r <= p:
                     graph.add_edge(i, j)
                     ne = [(i, j)]
-                    path = '[' + str(t + 1) + ']' + 'ne_added_' + '(' + str(i) + ',' + str(j) + ')' + 'r=' + str(
+                    if display_steps==True:
+                        path = '[' + str(t + 1) + ']' + 'ne_added_' + '(' + str(i) + ',' + str(j) + ')' + 'r=' + str(
                         r) + '.png'
-                    display_graph(graph, added_new_node=ne, path=path)
+
+                        display_graph(graph, added_new_node=ne, path=path)
                     t += 1
                 else:
                     # path = '['+str(t+1)+']'+'ne_not_added_' + '('+str(added_new_node)+','+str(j)+')'+'p='+str(r)+'.png'
@@ -88,11 +90,11 @@ def erdos_renyi(graph, p=0.001):
                     continue
 
 
-def random_graph_generator(n, p):
+def random_graph_generator(n, p, display_steps=False):
     graph = nx.Graph()
     graph.add_nodes_from([x for x in range(n)])
     display_graph(graph, i='', added_new_node=[])
-    erdos_renyi(graph, p)
+    erdos_renyi(graph, p, display_steps)
     display_graph(graph, i='', added_new_node=[], path='end.png')
 
 

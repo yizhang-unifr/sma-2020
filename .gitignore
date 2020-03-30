@@ -74,5 +74,9 @@ fabric.properties
 
 random_graph
 small_world
+pdf
 *.zip
 *.gz
+*.png
+notes.md
+__pycache__
