@@ -78,5 +78,7 @@ pdf
 *.zip
 *.gz
 *.png
+*.svg
+*.data
 notes.md
 __pycache__
