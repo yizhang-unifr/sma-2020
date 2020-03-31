@@ -88,14 +88,16 @@ def erdos_renyi(graph, p=0.001, display_steps=False):
                     # display_graph(graph,path=path)
                     t += 1
                     continue
+    return graph
 
 
 def random_graph_generator(n, p, display_steps=False):
     graph = nx.Graph()
     graph.add_nodes_from([x for x in range(n)])
     display_graph(graph, i='', added_new_node=[])
-    erdos_renyi(graph, p, display_steps)
+    res = erdos_renyi(graph, p, display_steps)
     display_graph(graph, i='', added_new_node=[], path='end.png')
+    return res
 
 
 if __name__ == "__main__":
