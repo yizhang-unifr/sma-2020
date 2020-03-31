@@ -6,15 +6,16 @@
 
 __author__ = 'Yi Zhang'
 
-import networkx as nx
+import pickle
+
 import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
+from helper import timer, description
+from random_graph import random_graph_generator
 from scipy.optimize import curve_fit
 from scipy.stats import binom
-import numpy as np
-from random_graph import random_graph_generator
 from small_world import small_world
-import pickle
-from helper import timer,description
 
 # load edges
 
@@ -22,19 +23,18 @@ path = 'facebook_combined.txt'
 facebook_g = nx.read_edgelist(path=path)
 
 
-
 # Degree Distribution
 
 def func_powerlaw(x, m, c, c0):
-    return c0 + x**m * c
+    return c0 + x ** m * c
 
 
 # plot degree distribution
-def plot_dd(dd, reg_plot = True, regression=None, path='facebook',label = None, color = 'r'):
+def plot_dd(dd, reg_plot=True, regression=None, path='facebook', label=None, color='r'):
     y = dd
     x = list(range(len(y)))
-    if reg_plot == True:
-        if regression is None: # if None, power law
+    if reg_plot:
+        if regression is None:  # if None, power law
             p_opt, p_cov = curve_fit(func_powerlaw, x, y)
             print('Power law regression : y = x^(%f)*(%f)+%f' % tuple(p_opt))
             regression = [func_powerlaw(i, *p_opt) for i in x if func_powerlaw(i, *p_opt) > 0]
@@ -44,52 +44,57 @@ def plot_dd(dd, reg_plot = True, regression=None, path='facebook',label = None, 
     ax = fig.add_subplot(111)
     ax.set_xlabel('Degrees')
     ax.set_ylabel('Number of counts')
-    ax.bar(x,y,label='Counts on degree')
-    if reg_plot == True:
+    ax.bar(x, y, label='Counts on degree')
+    if reg_plot:
         if label is None:
-            ax.plot(x[:len(regression)],regression,color=color,label='Power law regression')
+            ax.plot(x[:len(regression)], regression, color=color, label='Power law regression')
         else:
             ax.plot(x[:len(regression)], regression, color=color, label=label, linestyle='dashed')
     ax.legend()
-    plt.savefig(path+'_dd.png')
+    plt.savefig(path + '_dd.png')
     # plt.show()
 
 
-def plot_graph(g,title, color='blue',path='facebook_network'):
+def plot_graph(graph, title, color='blue', path='facebook_network'):
     plt.figure(figsize=(8, 6))
-    pos_random = nx.spring_layout(g)
-    nx.draw_networkx_nodes(g, pos=pos_random, node_size=1, node_color=color)
-    nx.draw_networkx_edges(g, pos=pos_random, alpha=0.01)
+    pos_random = nx.spring_layout(graph)
+    nx.draw_networkx_nodes(graph, pos=pos_random, node_size=1, node_color=color)
+    nx.draw_networkx_edges(graph, pos=pos_random, alpha=0.01)
     plt.axis('off')
     plt.title(title)
-    plt.savefig(path+'.svg',dpi=1000)
-    plt.savefig(path+'.png',dpi=1000)
+    plt.savefig(path + '.svg', dpi=1000)
+    plt.savefig(path + '.png', dpi=1000)
 
     # plt.show()
+
 
 # Average Path Length (!Time-consuming!)
 
 @timer
 @description('Calculation of average path length (Facebook Network)')
-def get_facebook_apl(g):
-    res = nx.average_shortest_path_length(g)
-    return res
+def get_facebook_apl(graph):
+    results = nx.average_shortest_path_length(graph)
+    return results
+
 
 # Clustering Coefficient
 @timer
 @description('Calculation of average clustering coefficient (Facebook Network)')
-def get_facebook_cc(g):
-    res = nx.average_clustering(g)
-    return res
+def get_facebook_cc(graph):
+    results = nx.average_clustering(graph)
+    return results
+
 
 # function for task 2
 
-def C(d): # Clustering coefficient of ring lattice
-    return 3*(d-2)/(4*(d-1))
+def C(d):  # Clustering coefficient of ring lattice
+    return 3 * (d - 2) / (4 * (d - 1))
 
-def beta_func(cc,d):
-    beta = (1 - cc/C(d))**(1/3)
+
+def beta_func(cc, d):
+    beta = (1 - cc / C(d)) ** (1 / 3)
     return beta
+
 
 # random graph
 
@@ -97,16 +102,18 @@ def beta_func(cc,d):
 
 @timer
 @description('Calculation of average path length (Random Graph)')
-def get_r_graph_apl(g):
-    res = nx.average_shortest_path_length(g)
-    return res
+def get_random_graph_apl(graph):
+    result = nx.average_shortest_path_length(graph)
+    return result
+
 
 # Clustering Coefficient
 @timer
 @description('Calculation of average clustering coefficient (Random Graph)')
-def get_r_graph_cc(g):
-    res = nx.average_clustering(g)
-    return res
+def get_random_graph_cc(graph):
+    result = nx.average_clustering(graph)
+    return result
+
 
 # Small World
 
@@ -114,16 +121,18 @@ def get_r_graph_cc(g):
 
 @timer
 @description('Calculation of average path length (Small World)')
-def get_s_world_apl(g):
-    res = nx.average_shortest_path_length(g)
-    return res
+def get_small_world_apl(graph):
+    result = nx.average_shortest_path_length(graph)
+    return result
+
 
 # Clustering Coefficient
 @timer
 @description('Calculation of average clustering coefficient (Small World)')
-def get_s_world_cc(g):
+def get_small_world_cc(g):
     res = nx.average_clustering(g)
     return res
+
 
 if __name__ == '__main__':
     # Number of Nodes
@@ -155,7 +164,7 @@ if __name__ == '__main__':
     facebook_cc = get_facebook_cc(facebook_g)
     print('Average clustering coefficient of facebook network is: %.4f' % facebook_cc)
 
-    # plot_graph(facebook_g,title='Facebook network',color='red')
+    plot_graph(facebook_g, title='Facebook network', color='red')
     '''
     Output
     Finished Calculation of average clustering coefficient (Facebook Network) in 0 days, 0 minutes and 2.659 seconds
@@ -173,84 +182,88 @@ if __name__ == '__main__':
       C(d) = 3(d-2)/(4(d-1))
     '''
 
-    avg_degree = number_of_edges*2/number_of_nodes
-    print("Average degree of facebook network is %0.4f" %  avg_degree)
+    avg_degree = number_of_edges * 2 / number_of_nodes
+    print("Average degree of facebook network is %0.4f" % avg_degree)
 
-    p = avg_degree/(number_of_nodes-1)
+    p = avg_degree / (number_of_nodes - 1)
     print("Correspondent p = %0.4f" % p)
 
+
     def init_random_graph():
-        r_graph = random_graph_generator(number_of_nodes,p)
+        r_graph = random_graph_generator(number_of_nodes, p)
         r_graph_dd_list = nx.degree_histogram(r_graph)
         max_ind = r_graph_dd_list.index(max(r_graph_dd_list))
         r_x = list(range(len(r_graph_dd_list)))
-        r_regression = binom.pmf(r_x,number_of_nodes,p=p)*(number_of_nodes-1)
+        r_regression = binom.pmf(r_x, number_of_nodes, p=p) * (number_of_nodes - 1)
         reg_max_ind = np.argmax(r_regression)
-        shift = max_ind-reg_max_ind
+        shift = max_ind - reg_max_ind
         # handle the shift
-        if shift>0: # shift right
-            r_regression = np.concatenate((np.zeros((shift,)), r_regression[:len(r_regression)-shift]))
-        else: # shift left
+        if shift > 0:  # shift right
+            r_regression = np.concatenate((np.zeros((shift,)), r_regression[:len(r_regression) - shift]))
+        else:  # shift left
             r_regression = np.concatenate((r_regression[(-shift):], np.zeros((-shift,))))
-        plot_dd(r_graph_dd_list,regression=r_regression, path='r_graph',color='tab:orange',label='Approx. Binomial Distribution')
+        plot_dd(r_graph_dd_list, regression=r_regression, path='r_graph', color='tab:orange',
+                label='Approx. Binomial Distribution')
 
-        r_graph_apl = get_r_graph_apl(r_graph)
+        r_graph_apl = get_random_graph_apl(r_graph)
         print('Average path length of random graph network is: %.4f' % r_graph_apl)
 
-        r_graph_cc = get_r_graph_cc(r_graph)
+        r_graph_cc = get_random_graph_cc(r_graph)
         print('Average clustering coefficient of random graph network is: %.4f' % r_graph_cc)
 
         # save random_graph
         r_graph_dict = {
             'p': p,
             'r_graph': r_graph,
-            'r_graph_apl':r_graph_apl,
-            'r_graph_cc':r_graph_cc
+            'r_graph_apl': r_graph_apl,
+            'r_graph_cc': r_graph_cc
         }
 
         with open('random_graph.data', 'wb') as rg:
             pickle.dump(r_graph_dict, rg)
         return r_graph_dict
 
+
     try:
         with open('random_graph.data', 'rb') as rg:
             r_graph_dict = pickle.load(rg)
     except IOError:
         print("No files found. Re-building... ")
-        r_graph_dict= init_random_graph()
+        r_graph_dict = init_random_graph()
     finally:
         p = r_graph_dict['p']
         r_graph = r_graph_dict['r_graph']
         r_graph_apl = r_graph_dict['r_graph_apl']
         r_graph_cc = r_graph_dict['r_graph_cc']
         print('Random Graph : \n#Edges = %s' % len(r_graph.edges))
-        plot_graph(r_graph,title='Random graph',color='blue',path='random_graph_network')
+        plot_graph(r_graph, title='Random graph', color='blue', path='random_graph_network')
 
     '''
     Output
     Average degree of facebook network is 43.6910
     Correspondent p = 0.0108
-    Finished Calculation of average path length (Random Graph) in 0 days, 5 minutes and 33.065 seconds
-    Average path length of random graph network is: 2.6078
-    Finished Calculation of average clustering coefficient (Random Graph) in 0 days, 0 minutes and 1.293 seconds
-    Average clustering coefficient of random graph network is: 0.0108
+    Finished Calculation of average path length (Random Graph) in 0 days, 10 minutes and 11.186 seconds
+    Average path length of random graph network is: 2.1281
+    Finished Calculation of average clustering coefficient (Random Graph) in 0 days, 0 minutes and 5.103 seconds
+    Average clustering coefficient of random graph network is: 0.0214
     Random Graph : 
-    #Edges = 87935
+    #Edges = 175750
     '''
+
 
     # Small world
     def init_small_world():
-        beta = beta_func(facebook_cc,avg_degree)
+        beta = beta_func(facebook_cc, avg_degree)
         print('Correspondent beta = %.4f' % beta)
-        s_world = small_world(number_of_nodes,int(avg_degree),beta)
-        s_world_dd_list =nx.degree_histogram(s_world)
-        plot_dd(s_world_dd_list,reg_plot=False, path='s_world', color='m',
-                label='Approx. Binomial Distribution' )
+        s_world = small_world(number_of_nodes, int(avg_degree), beta)
+        s_world_dd_list = nx.degree_histogram(s_world)
+        plot_dd(s_world_dd_list, reg_plot=False, path='s_world', color='m',
+                label='Approx. Binomial Distribution')
 
-        s_world_apl = get_s_world_apl(s_world)
+        s_world_apl = get_small_world_apl(s_world)
         print('Average path length of small world network is: %.4f' % s_world_apl)
 
-        s_world_cc = get_s_world_cc(s_world)
+        s_world_cc = get_small_world_cc(s_world)
         print('Average clustering coefficient of small world network is: %.4f' % s_world_cc)
 
         # save small_world
@@ -266,6 +279,7 @@ if __name__ == '__main__':
 
         return s_world_dict
 
+
     try:
         with open('small_world.data', 'rb') as sw:
             s_world_dict = pickle.load(sw)
@@ -278,7 +292,8 @@ if __name__ == '__main__':
         s_world_apl = s_world_dict['s_world_apl']
         s_world_cc = s_world_dict['s_world_cc']
         print('Small World : \n#Edges = %s' % len(s_world.edges))
-        # plot_graph(s_world,title='Small world',color='green',path='small_world_network')
+        plot_graph(s_world, title='Small world', color='green', path='small_world_network')
+
     '''
     Output: small world
     Correspondent beta = 0.5575
