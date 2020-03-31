@@ -72,7 +72,7 @@ def erdos_renyi(graph, p=0.001, display_steps=False):
     t = 0
     for i in graph.nodes():
         for j in graph.nodes():
-            if i != j:
+            if i < j:
                 r = random.random()
                 if r <= p:
                     graph.add_edge(i, j)
@@ -94,12 +94,15 @@ def erdos_renyi(graph, p=0.001, display_steps=False):
 def random_graph_generator(n, p, display_steps=False):
     graph = nx.Graph()
     graph.add_nodes_from([x for x in range(n)])
-    display_graph(graph, i='', added_new_node=[])
+    #display_graph(graph, i='', added_new_node=[])
     res = erdos_renyi(graph, p, display_steps)
-    display_graph(graph, i='', added_new_node=[], path='end.png')
+    # display_graph(graph, i='', added_new_node=[], path='end.png')
     return res
 
 
 if __name__ == "__main__":
     # test
-    random_graph_generator(20, 0.05)
+    test = random_graph_generator(4039, 0.0108)
+    print(len(test.edges))
+    test2 = nx.fast_gnp_random_graph(4039,0.0108)
+    print(len(test2.edges))
