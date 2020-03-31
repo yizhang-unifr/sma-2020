@@ -55,6 +55,9 @@ python facebook.py
 
 #### 3. Results explanation
 
+
+##### 3.1 generated file results
+
 ```
 After the execution stops, you get the following results.
 
@@ -68,4 +71,20 @@ The file 's_world_dd.png' is the degree distribution of the small world model.
 The file 'small_world_network.png' is the visualisation of the small world model.
 ```
 
+##### 3.2 generated console results example
 
+```
+Nodes: 4039
+Edges:  88234
+Power law regression : y = x^(0.119603)*(-42.776243)+91.555318
+Finished Calculation of average path length (Facebook Network) in 0 days, 4 minutes and 2.380 seconds
+Average path length of facebook network is: 3.6925
+Finished Calculation of average clustering coefficient (Facebook Network) in 0 days, 0 minutes and 2.574 seconds
+Average clustering coefficient of facebook network is: 0.6055
+Average degree of facebook network is 43.6910
+Correspondent p = 0.0108
+Random Graph : 
+Edges = 175239
+Small World : 
+Edges = 84819
+```
