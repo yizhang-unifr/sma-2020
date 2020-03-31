@@ -35,10 +35,37 @@ from helper import timer,description
 
 > From [http://snap.stanford.edu/data/egonets-Facebook.html](http://snap.stanford.edu/data/egonets-Facebook.html)
 
+Download facebook_combined.txt dataset in the same directory
+
 ```python
 
 ```
 
 
-1. 
+#### 2.  Instructions on how to run the project
+
+##### 2.1 Required libraries
+```
+pip install -r requirements.txt
+```
+##### 2.2 run the project
+```
+python facebook.py
+```
+
+#### 3. Results explanation
+
+```
+After the execution stops, you get the following results.
+
+The file 'facebook_dd.png' is the degree distribution of facebook network.
+The file 'facebook_network.png' is the visualisation of the facebook network.
+
+The file 'r_graph_dd.png' is the degree distribution of the random graph model.
+The file 'random_graph_network.png' is the visualisation of the random graph model.
+
+The file 's_world_dd.png' is the degree distribution of the small world model.
+The file 'small_world_network.png' is the visualisation of the small world model.
+```
+
 
