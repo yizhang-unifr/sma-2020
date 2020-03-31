@@ -224,7 +224,7 @@ if __name__ == '__main__':
         r_graph_apl = r_graph_dict['r_graph_apl']
         r_graph_cc = r_graph_dict['r_graph_cc']
         print('Random Graph : \n#Edges = %s' % len(r_graph.edges))
-        # plot_graph(r_graph,title='Random graph',color='blue',path='random_graph_network')
+        plot_graph(r_graph,title='Random graph',color='blue',path='random_graph_network')
 
     '''
     Output
