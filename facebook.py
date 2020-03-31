@@ -230,12 +230,12 @@ if __name__ == '__main__':
     Output
     Average degree of facebook network is 43.6910
     Correspondent p = 0.0108
-    Finished Calculation of average path length (Random Graph) in 0 days, 10 minutes and 11.186 seconds
-    Average path length of random graph network is: 2.1281
-    Finished Calculation of average clustering coefficient (Random Graph) in 0 days, 0 minutes and 5.103 seconds
-    Average clustering coefficient of random graph network is: 0.0214
+    Finished Calculation of average path length (Random Graph) in 0 days, 5 minutes and 33.065 seconds
+    Average path length of random graph network is: 2.6078
+    Finished Calculation of average clustering coefficient (Random Graph) in 0 days, 0 minutes and 1.293 seconds
+    Average clustering coefficient of random graph network is: 0.0108
     Random Graph : 
-    #Edges = 175750
+    #Edges = 87935
     '''
 
     # Small world
