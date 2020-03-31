@@ -57,7 +57,7 @@ def plot_dd(dd, reg_plot = True, regression=None, path='facebook',label = None, 
 
 def plot_graph(g,title, color='blue',path='facebook_network'):
     plt.figure(figsize=(8, 6))
-    pos_random = nx.spiral_layout(g)
+    pos_random = nx.spring_layout(g)
     nx.draw_networkx_nodes(g, pos=pos_random, node_size=1, node_color=color)
     nx.draw_networkx_edges(g, pos=pos_random, alpha=0.01)
     plt.axis('off')
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     facebook_cc = get_facebook_cc(facebook_g)
     print('Average clustering coefficient of facebook network is: %.4f' % facebook_cc)
 
-    plot_graph(facebook_g,title='Facebook network',color='red')
+    # plot_graph(facebook_g,title='Facebook network',color='red')
     '''
     Output
     Finished Calculation of average clustering coefficient (Facebook Network) in 0 days, 0 minutes and 2.659 seconds
@@ -223,8 +223,8 @@ if __name__ == '__main__':
         r_graph = r_graph_dict['r_graph']
         r_graph_apl = r_graph_dict['r_graph_apl']
         r_graph_cc = r_graph_dict['r_graph_cc']
-
-        plot_graph(r_graph,title='Random graph',color='blue',path='random_graph_network')
+        print('Random Graph : \n#Edges = %s' % len(r_graph.edges))
+        # plot_graph(r_graph,title='Random graph',color='blue',path='random_graph_network')
 
     '''
     Output
@@ -234,6 +234,8 @@ if __name__ == '__main__':
     Average path length of random graph network is: 2.1281
     Finished Calculation of average clustering coefficient (Random Graph) in 0 days, 0 minutes and 5.103 seconds
     Average clustering coefficient of random graph network is: 0.0214
+    Random Graph : 
+    #Edges = 175750
     '''
 
     # Small world
@@ -275,8 +277,8 @@ if __name__ == '__main__':
         s_world = s_world_dict['s_world']
         s_world_apl = s_world_dict['s_world_apl']
         s_world_cc = s_world_dict['s_world_cc']
-
-        plot_graph(s_world,title='Small world',color='green',path='small_world_network')
+        print('Small World : \n#Edges = %s' % len(s_world.edges))
+        # plot_graph(s_world,title='Small world',color='green',path='small_world_network')
     '''
     Output: small world
     Correspondent beta = 0.5575
@@ -284,4 +286,6 @@ if __name__ == '__main__':
     Average path length of small world network is: 2.6817
     Finished Calculation of average clustering coefficient (Small World) in 0 days, 0 minutes and 1.208 seconds
     Average clustering coefficient of small world network is: 0.0818
+    Small World : 
+    #Edges = 84819
     '''
