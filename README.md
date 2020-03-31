@@ -12,11 +12,7 @@ The aim of this project is to implement a tool for simulating real world network
 
 ### Tasks:
 
-#### 0. Dependencies and structures
-
-- Dependencies
-
-    In this project, `networkx` and `matplotlib` will be required as core dependencies. All dependencies are listed in the following
+#### 0. Requirments
 
 ```python
 # required libs
@@ -26,119 +22,69 @@ from scipy.optimize import curve_fit
 from scipy.stats import binom
 import numpy as np
 import pickle
-```
 
-- User defined modules are the 2 model generators and a helper modules to 
-
-```python
 # model generator and helper functions
 from random_graph import random_graph_generator
 from small_world import small_world
 from helper import timer,description
 ```
 
-- Main entry point is `facebook.py`
-
 #### 1. Dataset
 
 ##### 1.1 Load the Facebook dataset
 
-From [http://snap.stanford.edu/data/egonets-Facebook.html](http://snap.stanford.edu/data/egonets-Facebook.html) we have downloaded and unzip the file `'facebook_combined.txt.gz'` to `'facebook_combined.txt'`. Then, we copy it to the root folder of project. With the following script we load the edge list and generate the graph of the given real world facebook network
+> From [http://snap.stanford.edu/data/egonets-Facebook.html](http://snap.stanford.edu/data/egonets-Facebook.html)
+
+Download facebook_combined.txt dataset in the same directory
 
 ```python
-path = 'facebook_combined.txt'
-facebook_g = nx.read_edgelist(path=path)
+
 ```
 
-##### 1.2 Explore the properties of the graph.
 
-In this section, we explored the following properties of the graphs:
+#### 2.  Instructions on how to run the project
 
-- Number of nodes = 4039
-
-```python
-# Number of Nodes
-number_of_nodes = len(facebook_g.nodes)
-print("#Nodes:", number_of_nodes)
-
-'''
-Output
-#Nodes: 4039
-'''
+##### 2.1 Required libraries
+```
+pip install -r requirements.txt
+```
+##### 2.2 run the project
+```
+python facebook.py
 ```
 
-- Number of edges = 88234
+#### 3. Results explanation
 
-```python
-# Number of Edges
-number_of_edges = len(facebook_g.edges)
-print('#Edges: ', number_of_edges)
 
-'''
-Output
-#Edges:  88234
-'''
+##### 3.1 generated file results
+
+```
+After the execution stops, you get the following results.
+
+The file 'facebook_dd.png' is the degree distribution of facebook network.
+The file 'facebook_network.png' is the visualisation of the facebook network.
+
+The file 'r_graph_dd.png' is the degree distribution of the random graph model.
+The file 'random_graph_network.png' is the visualisation of the random graph model.
+
+The file 's_world_dd.png' is the degree distribution of the small world model.
+The file 'small_world_network.png' is the visualisation of the small world model.
 ```
 
-- Average degree of graphs = 43.6910
+##### 3.2 generated console results example
 
-According to the definition of average degree of graphs(1) and definition of degree of graphs (2):
-$$
-\begin{aligned}    
-    \bar{d_g} & = \frac{1}{n}\sum_{i=1}^{n}{d_i} & & &(1)\\
-    \sum_{i=1}^{n}{d_i} & = 2 \times |E| & & & (2)\\
-\end{aligned}
-$$
-Combining (1) and (2)
-We have:
-$$
-    \bar{d_g} = \frac{2}{n} |E| 
-$$
-where $n$ is number of nodes, $d_i$ is the degree of vertice $v_i$ and $|E|$ is the number of edges.
-
-```python
-avg_degree = number_of_edges*2/number_of_nodes
-print("Average degree of facebook network is %0.4f" %  avg_degree)
-
-'''
-Output
-Average degree of facebook network is 43.6910
-'''
 ```
-
-- Average path length of graphs = 3.6925
-
-According to the definition of average path length we obtain
-
-$$
-\textnormal{Average path length}: \bar{l}_G = \frac{1}{n(n-1)} \cdot \sum_{i\neq j}d(v_i,v_j)
-$$
-
-where $n$ is the number of vertices, $d(v_i, v_j)$ is the shortest path length from $v_i$ to $v_j$
-
-```python
-@timer
-@description('Calculation of average path length (Facebook Network)')
-def get_facebook_apl(g):
-    res = nx.average_shortest_path_length(g)
-    return res
-facebook_apl = get_facebook_apl(facebook_g)
-    print('Average path length of facebook network is: %.4f' % facebook_apl)
-'''
-Output
-Finished Calculation of Average path length (Facebook Network) in 0 days, 5 minutes and 2.912 seconds
+Nodes: 4039
+Edges:  88234
+Power law regression : y = x^(0.119603)*(-42.776243)+91.555318
+Finished Calculation of average path length (Facebook Network) in 0 days, 4 minutes and 2.380 seconds
 Average path length of facebook network is: 3.6925
-'''
+Finished Calculation of average clustering coefficient (Facebook Network) in 0 days, 0 minutes and 2.574 seconds
+Average clustering coefficient of facebook network is: 0.6055
+Average degree of facebook network is 43.6910
+Correspondent p = 0.0108
+Random Graph : 
+Edges = 175239
+Small World : 
+Edges = 84819
 ```
-
-
-
-- Cluster coefficient = 0.6055
-
-
-
-$$
-\bar{C}(g) = \frac{1}{n}\sum_{i=1}^{n}{\frac{\textnormal{\#connected pairs of } v \textnormal{'s neighbors}}{\textnormal{\#pairs of }v \textnormal{'s neighbors}}}
-$$
-
-
