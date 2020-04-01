@@ -16,7 +16,7 @@ from small_world import small_world
 import pickle
 from helper import timer,description
 
-# load edges
+# load edge list
 
 path = 'facebook_combined.txt'
 facebook_g = nx.read_edgelist(path=path)
@@ -88,7 +88,7 @@ def C(d): # Clustering coefficient of ring lattice
     return 3*(d-2)/(4*(d-1))
 
 def beta_func(cc,d):
-    beta = (1 - cc/C(d))**(1/3)
+    beta = 1 - pow(cc/C(d),(1/3))
     return beta
 
 # random graph
@@ -125,6 +125,19 @@ def get_s_world_cc(g):
     res = nx.average_clustering(g)
     return res
 
+def dd_analyzer(dd_list):
+    dd_len = len(dd_list)
+    dd_sum = sum(dd_list)
+    dd_max = max(dd_list)
+    dd_max_ind = dd_list.index(dd_max)
+    dict = {
+        'max degree' : dd_len,
+        'total nodes' : dd_sum,
+        'most often degree' : dd_max_ind,
+        'most often degree counts' : dd_max,
+    }
+    return dict
+
 if __name__ == '__main__':
     # Number of Nodes
     number_of_nodes = len(facebook_g.nodes)
@@ -135,51 +148,39 @@ if __name__ == '__main__':
     # Plot
     degree_distribution_list = nx.degree_histogram(facebook_g)
 
-    '''
-    Output
-    #Nodes: 4039
-    #Edges:  88234
-    Power law regression : y = x^(0.119603)*(-42.776247)+91.555322
-    '''
-
     plot_dd(degree_distribution_list)
     # Get Average Path Length (!Time-consuming!)
     facebook_apl = get_facebook_apl(facebook_g)
     print('Average path length of facebook network is: %.4f' % facebook_apl)
-    '''
-    Output:
-    Finished Calculation of Average path length (Facebook Network) in 0 days, 5 minutes and 2.912 seconds
-    Average path length of facebook network is: 3.6925
-    '''
+
     # Get Average Clustering Coefficient (!Time-consuming!)
     facebook_cc = get_facebook_cc(facebook_g)
     print('Average clustering coefficient of facebook network is: %.4f' % facebook_cc)
 
-    # plot_graph(facebook_g,title='Facebook network',color='red')
-    '''
-    Output
-    Finished Calculation of average clustering coefficient (Facebook Network) in 0 days, 0 minutes and 2.659 seconds
-    Average clustering coefficient of facebook network is: 0.6055
-    '''
-
-    ''' 
-    2 Simulation models:
-    - Find the average degree of random graph
-    - Random Graph 
-      with p = c/(n-1), where c is the average degree of graph
-      because the expected degree of a random graph is c = (n-1)p
-    - Small World Graph 
-      with C(beta) = (1-beta)^3 * C(d), where d is the average degree of graph
-      C(d) = 3(d-2)/(4(d-1))
-    '''
+    # plot facebook network
+    plot_graph(facebook_g,title='Facebook network',color='red')
+    facebook_dd_dict = dd_analyzer(degree_distribution_list)
+    print('facebook degree distribution:', facebook_dd_dict)
 
     avg_degree = number_of_edges*2/number_of_nodes
     print("Average degree of facebook network is %0.4f" %  avg_degree)
 
-    p = avg_degree/(number_of_nodes-1)
-    print("Correspondent p = %0.4f" % p)
+    '''
+    Output: Facebook
+    #Nodes: 4039
+    #Edges:  88234
+    Power law regression : y = x^(0.119603)*(-42.776247)+91.555322
+    Finished Calculation of Average path length (Facebook Network) in 0 days, 5 minutes and 2.912 seconds
+    Average path length of facebook network is: 3.6925
+    Finished Calculation of average clustering coefficient (Facebook Network) in 0 days, 0 minutes and 2.659 seconds
+    Average clustering coefficient of facebook network is: 0.6055
+    facebook degree distribution: {'max degree': 1046, 'total nodes': 4039, 'most often degree': 8, 'most often degree counts': 111}
+    Average degree of facebook network is 43.6910
+    '''
 
     def init_random_graph():
+        p = avg_degree / (number_of_nodes - 1)
+        print("Correspondent p = %0.4f" % p)
         r_graph = random_graph_generator(number_of_nodes,p)
         r_graph_dd_list = nx.degree_histogram(r_graph)
         max_ind = r_graph_dd_list.index(max(r_graph_dd_list))
@@ -224,10 +225,13 @@ if __name__ == '__main__':
         r_graph_apl = r_graph_dict['r_graph_apl']
         r_graph_cc = r_graph_dict['r_graph_cc']
         print('Random Graph : \n#Edges = %s' % len(r_graph.edges))
-        plot_graph(r_graph,title='Random graph',color='blue',path='random_graph_network')
+
+    plot_graph(r_graph,title='Random graph',color='blue',path='random_graph_network')
+    r_graph_dd_dict = dd_analyzer(nx.degree_histogram(r_graph))
+    print('random graph degree distribution:', r_graph_dd_dict)
 
     '''
-    Output
+    Output: Random Graph
     Average degree of facebook network is 43.6910
     Correspondent p = 0.0108
     Finished Calculation of average path length (Random Graph) in 0 days, 5 minutes and 33.065 seconds
@@ -236,11 +240,12 @@ if __name__ == '__main__':
     Average clustering coefficient of random graph network is: 0.0108
     Random Graph : 
     #Edges = 87935
+    random graph degree distribution: {'max degree': 70, 'total nodes': 4039, 'most often degree': 42, 'most often degree counts': 271}
     '''
 
     # Small world
     def init_small_world():
-        beta = beta_func(facebook_cc,avg_degree)
+        beta = beta_func(facebook_cc, avg_degree)
         print('Correspondent beta = %.4f' % beta)
         s_world = small_world(number_of_nodes,int(avg_degree),beta)
         s_world_dd_list =nx.degree_histogram(s_world)
@@ -278,14 +283,21 @@ if __name__ == '__main__':
         s_world_apl = s_world_dict['s_world_apl']
         s_world_cc = s_world_dict['s_world_cc']
         print('Small World : \n#Edges = %s' % len(s_world.edges))
-        # plot_graph(s_world,title='Small world',color='green',path='small_world_network')
+
+    s_world_dd_dict = dd_analyzer(nx.degree_histogram(s_world))
+    print('small world degree distribution:', s_world_dd_dict)
+    plot_graph(s_world,title='Small world',color='green',path='small_world_network')
+
     '''
     Output: small world
     Correspondent beta = 0.5575
     Finished Calculation of average path length (Small World) in 0 days, 5 minutes and 47.604 seconds
     Average path length of small world network is: 2.6817
-    Finished Calculation of average clustering coefficient (Small World) in 0 days, 0 minutes and 1.208 seconds
-    Average clustering coefficient of small world network is: 0.0818
+    Finished Calculation of average clustering coefficient (Small World) in 0 days, 0 minutes and 1.039 seconds
+    Average clustering coefficient of small world network is: 0.6126
     Small World : 
     #Edges = 84819
+    small world degree distribution: {'max degree': 49, 'total nodes': 4039, 'most often degree': 42, 'most often degree counts': 1144}
     '''
+
+

@@ -84,4 +84,5 @@ pdf
 *.svg
 *.data
 notes.md
+report
 __pycache__
