@@ -1,0 +1,24 @@
+#Nodes: 4039
+#Edges:  88234
+Power law regression : y = x^(0.119603)*(-42.776243)+91.555318
+Finished Calculation of average path length (Facebook Network) in 0 days, 4 minutes and 27.277 seconds
+Average path length of facebook network is: 3.6925
+Finished Calculation of average clustering coefficient (Facebook Network) in 0 days, 0 minutes and 3.117 seconds
+Average clustering coefficient of facebook network is: 0.6055
+Average degree of facebook network is 43.6910
+Correspondent p = 0.0108
+No files found. Re-building...
+Finished Calculation of average path length (Random Graph) in 0 days, 5 minutes and 4.905 seconds
+Average path length of random graph network is: 2.6046
+Finished Calculation of average clustering coefficient (Random Graph) in 0 days, 0 minutes and 1.135 seconds
+Average clustering coefficient of random graph network is: 0.0108
+Random Graph :
+#Edges = 88387
+No files found. Re-building...
+Correspondent beta = 0.5575
+Finished Calculation of average path length (Small World) in 0 days, 5 minutes and 48.237 seconds
+Average path length of small world network is: 2.6829
+Finished Calculation of average clustering coefficient (Small World) in 0 days, 0 minutes and 1.457 seconds
+Average clustering coefficient of small world network is: 0.0837
+Small World :
+#Edges = 84819

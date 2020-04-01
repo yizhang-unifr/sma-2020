@@ -159,11 +159,13 @@ def small_world(n, k, p=0.001, display_steps=False):
                         graph.remove_edges_from(de)
                         ne = [(v, random_node)]
                         graph.add_edges_from(ne)
-                        if display_steps == True:
-                            path = '[' + str(t + 1) + ']' + 'added(' + str(v) + ',' + str(random_node) + ')_removed(' + str(
-                            v) + ',' + str(nb) + ')_r=' + str(
-                            r) + '.png'
-                            display_graph(graph, added_new_node=v, nb=nb, ri=random_node, list_of_new_edges=ne, de=de, path=path)
+                        if display_steps:
+                            path = '[' + str(t + 1) + ']' + 'added(' + str(v) + ',' + str(
+                                random_node) + ')_removed(' + str(
+                                v) + ',' + str(nb) + ')_r=' + str(
+                                r) + '.png'
+                            display_graph(graph, added_new_node=v, nb=nb, ri=random_node, list_of_new_edges=ne, de=de,
+                                          path=path)
                         t += 1
     display_graph(graph, path='end.png')
 
