@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# created on 2:34 pm 22.03.20, by Yi Zhang
+# created on 2:34 pm 22.03.20, by Yi Zhang, modifications by Narek Andreasyan
 
 """ Random graph generator """
 

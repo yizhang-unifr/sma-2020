@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# created on 5:44 pm 22.03.20, by Yi Zhang
+# created on 5:44 pm 22.03.20, by Yi Zhang, modifications by Narek Andreasyan
 
 ' small world generator '
 

@@ -9,8 +9,10 @@ __author__ = 'Yi Zhang'
 import datetime as dt
 import functools
 
+
 def timer(func):
     '''Print the runtime of the decorated function'''
+
     @functools.wraps(func)
     def wrapper_timer(*args, **kwargs):
         # Before performing func
@@ -23,13 +25,17 @@ def timer(func):
         days, mins, secs = str(run_time).split(':')
         print(f'Finished {func.__str__:s} in {int(days):d} days, {int(mins):d} minutes and {float(secs):.3f} seconds')
         return val
+
     return wrapper_timer
+
 
 def description(newname):
     def wrapper_rename(func):
-        func.__str__=newname
+        func.__str__ = newname
         return func
+
     return wrapper_rename
+
 
 '''
 @timer
